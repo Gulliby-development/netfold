@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
+require "netfold"
+
+# Standard input and output are bytes; every byte is one character (ISO 8859-1), as the rows of the tests read them.
+$stdin.binmode
+$stdout.binmode
+$stderr.binmode
+args = ARGV.map { |word| word.dup.force_encoding(Encoding::BINARY) }
+input = Netfold::Cli.reads_stdin?(args) ? $stdin.read : ""
+reply = Netfold::Cli.run(args, input)
+$stdout.write(reply.out)
+$stderr.write(reply.err)
+exit(reply.status)
